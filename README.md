@@ -32,3 +32,7 @@ Output: http://i.imgur.com/ryiTiiH.png (incorrect, performs up then forward inst
 SF4 Ryu solar plexus uppercut FADC to victory : "FFFHPDMPDHPDPHPMPandMKQCFQCF3P"
 
 Output: http://i.imgur.com/x0los6T.png
+
+# Upcoming changes
+
+Comma/space separated input by the user, because right now it's really messy and sometimes the U/UF/UB or D/DB/DF inputs aren't properly recognized. SOON©©

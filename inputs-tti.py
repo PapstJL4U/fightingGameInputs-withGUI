@@ -5,6 +5,12 @@ from StringIO import StringIO
 path = 'assets' + os.sep
 
 _input = {
+		'lpmp': path + 'lpmp.png',
+		'lphp': path + 'lphp.png',
+		'mphp': path + 'mphp.png',
+		'lkmk': path + 'lkmk.png',
+		'lkhk': path + 'lkhk.png',
+		'mkhk': path + 'mkhk.png',
 		'2k': path + '2k.png',
 		'2p': path + '2p.png',
 		'3k': path + '3k.png',
@@ -47,6 +53,12 @@ _input = {
 }
 
 _width = {
+		'lpmp': 120,
+		'lphp': 120,
+		'mphp': 120,
+		'lkmk': 120,
+		'lkhk': 120,
+		'mkhk': 120,
 		'2k': 120,
 		'2p': 120,
 		'3k': 120,
@@ -109,11 +121,11 @@ if __name__ == '__main__':
 	_string = sys.argv[1]
 	_string = _string.lower()
 
-	robj = re.compile('|'.join(_input.keys()))
+	robj = re.compile(r'\b(' + '|'.join(_input.keys()) + r')\b')
 	_result = robj.sub(lambda m : _input[m.group(0)], _string)
-	_result = _result.split(' ')
 
 	# Arrange inputs
+	_result = _result.split(' ')
 	for i in range(len(_result)):
 		if _result[i] == ',':
 			_result[i] = path + 'comma.png'

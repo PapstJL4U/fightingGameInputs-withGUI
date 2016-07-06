@@ -23,6 +23,7 @@ Each input in the string must be separated by a single space.
 Recognized commands:
 * Punches : p, 2p, 3p, lp, mp, hp
 * Kicks : k, 2k, 3k, lk, mk, hk
+* Specific 2-input combinations : lpmp, lphp, mphp, lkmk, lkhk, mkhk
 * Guilty Gear extras : p, k, s, h, d
 * Directions : downleft (1), down (2), downright (3), left (4), neutral (5), right (6), upleft (7), up (8), upright (9)
 * Charges : chargeback, chargedown

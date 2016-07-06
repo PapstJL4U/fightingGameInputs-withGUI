@@ -10,8 +10,11 @@ HUGE thanks to /u/zhx for the sexiest icons. :)
 
 # How to use
 python inputs-tti.py "string" ["R G B A"]
+
 For the input string format, see below.
+
 R, G, B, and A are values between 0 and 255. These are optional.
+
 The default background will be transparent.
 
 # How to compose the input string
@@ -26,14 +29,24 @@ Recognized commands:
 * Link/chain notations : comma (,), greaterthan (>), plus (+), tilde (~), xx.
 
 # Example strings and outputs
-SF5 Ken advanced combo : python inputs-tti.py "2 mp , 4 mp > hp qcb mk srk 2p" "255 0 0 255"
+SF5 Ken advanced combo :
+
+`python inputs-tti.py "2 mp , 4 mp > hp qcb mk srk 2p" "255 0 0 255"`
 
 Output: http://i.imgur.com/958RNBx.png
 
-SF4 Viper bnb into Ultra : python inputs-tti.py "hp xx qcb hp ~ 3p , down hp xx srk 2p down upright qcb lk , qcf qcf 3p"
+---
+
+SF4 Viper bnb into Ultra :
+
+`python inputs-tti.py "hp xx qcb hp ~ 3p , down hp xx srk 2p down upright qcb lk , qcf qcf 3p"`
 
 Output: http://i.imgur.com/RysuscW.png
 
-SF4 Ryu solar plexus uppercut FADC to victory : python inputs-tti.py "6 hp , 2 mp , 2 hp xx srk lp , mp + mk xx dash , qcf qcf 3p"
+---
+
+SF4 Ryu solar plexus uppercut FADC to victory :
+
+`python inputs-tti.py "6 hp , 2 mp , 2 hp xx srk lp , mp + mk xx dash , qcf qcf 3p"`
 
 Output: http://i.imgur.com/OMuG2s8.png

@@ -1,6 +1,6 @@
 # fightingGameInputs-tti
 
-Text-to-image for fightning game inputs.
+Text-to-image for fightning game inputs : generate images from fighting game notations.
 
 HUGE thanks to /u/zhx for the sexiest icons. :)
 

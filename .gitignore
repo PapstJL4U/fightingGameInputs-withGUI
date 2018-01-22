@@ -96,3 +96,6 @@ pip-selfcheck.json
 
 # Output images...
 *.png
+
+*.swp
+*.swo

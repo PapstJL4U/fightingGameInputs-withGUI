@@ -8,6 +8,16 @@ HUGE thanks to /u/zhx for the sexiest icons. :)
 * [Python 2.7](https://www.python.org/download/releases/2.7/)
 * [pygame](http://www.pygame.org/download.shtml)
 
+Installation:
+
+    $ pip install --user -r ./requirements.txt
+
+Installation - with virtualenv:
+
+    $ virtualenv .
+    $ source bin/activate
+    $ pip install -r ./requirements.txt
+
 # How to use
 `python inputs-tti.py "string" ["R G B A"]`
 

@@ -2,6 +2,25 @@ from os import sep
 
 path = 'assets' + sep
 
+_available = "\
+\tlpmp, lphp, mphp, lkmk, lkhk, mkhk,\n\
+\t2k, 2p, 3k, 3p,\n\
+\tchargeback, chargedown,\n\
+\tcomma[,], d, dash, down[2], downleft[1], downright[3],\n\
+\tgreaterthan[>],\n\
+\thcb, hcf, hk, hp, hs,\n\
+\tk,\n\
+\tleft[4], lk, lp,\n\
+\tmk, mp,\n\
+\tneutral[5],\n\
+\tp, plus[+],\n\
+\tqcb, qcf,\n\
+\tright[6], rsrk,\n\
+\ts, spd, srk,\n\
+\ttilde[~],\n\
+\tup[8], upleft[7], upright[9],\n\
+\txx"
+
 _input = {
 		'lpmp': path + 'lpmp.png',
 		'lphp': path + 'lphp.png',

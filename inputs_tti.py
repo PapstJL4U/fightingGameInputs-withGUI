@@ -4,7 +4,6 @@ import sys, os, re, argparse, string
 import pygame
 
 from constants import _available, _input, _width, path
-
 # Create and configure arguments parser
 parser = argparse.ArgumentParser(description="Text-to-image for fighting game inputs")
 parser.add_argument("-O", "--correct-options", help="display available inputs and exit",
@@ -15,27 +14,16 @@ parser.add_argument("-o", "--output", help="name of the produced file, in the ou
         If not given, a name will be created based on the input string.")
 parser.add_argument("-c", "--color", help="color of the background. Syntax is \"R G B A\", \
         values must be between 0 and 255.")
-args = vars(parser.parse_args());
+args = vars(parser.parse_args())
 
-if __name__ == '__main__':
-    if args["correct_options"] is not None:
-        print "List of available inputs:\n" + _available
-        sys.exit(0)
-
-    # argparse arguments
-    inputString = args["input"]
-    outputFile = args["output"] if args["output"] != None else inputString
-    outputFile = ''.join(c for c in outputFile
-            if c in "-_.() %s%s" % (string.ascii_letters, string.digits))\
-            .replace(" ", "")
-    color = args["color"] if args["color"] != None else "0 0 0 0"
+def parseCombo(inputString, outputFile, color):
 
     colorarg = color.split(' ')
     _color = pygame.Color(int(colorarg[0]), int(colorarg[1]), int(colorarg[2]), int(colorarg[3]))
     _string = inputString.lower()
 
     robj = re.compile(r'\b(' + '|'.join(_input.keys()) + r')\b')
-    _result = robj.sub(lambda m : _input[m.group(0)], _string)
+    _result = robj.sub(lambda m: _input[m.group(0)], _string)
 
     # Arrange inputs
     _result = _result.split(' ')
@@ -70,7 +58,13 @@ if __name__ == '__main__':
     _images = []
     totalwidth = 0
     for i in range(len(_result)):
-        _images.append(pygame.image.load(_result[i]))
+        try:
+            _images.append(pygame.image.load(_result[i]))
+        except pygame.error as err:
+            print("No image for "+_result[i]+".")
+            i = pygame.image.load("assets"+os.sep+"invalidcombo.png")
+            pygame.image.save(i, os.path.join("output", outputFile + ".png"))
+            return
         totalwidth += _width[_result[i][7:-4]]
     dimensions = (totalwidth, 120)
     _surface = pygame.Surface(dimensions, pygame.SRCALPHA, 32)
@@ -81,4 +75,20 @@ if __name__ == '__main__':
         totalwidth += _width[_result[i][7:-4]]
 
     pygame.image.save(_surface, os.path.join("output", outputFile + ".png"))
-    print "Image saved to " + os.path.join("output", outputFile + ".png") + " !"
+
+
+if __name__ == '__main__':
+    if args["correct_options"] is not None:
+        print("List of available inputs:\n" + _available)
+        sys.exit(0)
+
+    # argparse arguments
+    inputString = args["input"]
+    outputFile = args["output"] if args["output"] != None else inputString
+    outputFile = ''.join(c for c in outputFile
+                         if c in "-_.() %s%s" % (string.ascii_letters, string.digits)) \
+        .replace(" ", "")
+    color = args["color"] if args["color"] != None else "0 0 0 0"
+
+    parseCombo(inputString, outputFile, color)
+    print("Image saved to " + os.path.join("output", outputFile + ".png") + " !")

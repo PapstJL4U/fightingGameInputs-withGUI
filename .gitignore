@@ -94,8 +94,11 @@ include/
 local/
 pip-selfcheck.json
 
+#JetBrains folder
+.idea
+
 # Output images...
-*.png
+
 
 *.swp
 *.swo

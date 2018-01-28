@@ -57,6 +57,8 @@ class ComboApp(QWidget):
         self.imageArea.setWidget(self.pxlbl)
         self.imageArea.setMaximumHeight(150)
 
+        print(str(self.imageArea.size())+"in init")
+
         #group for the layout
 
         #Layout for the input and image
@@ -120,6 +122,7 @@ class ComboApp(QWidget):
         print("exported notation image")
 
     def expList(self):
+        #TODO parse all Combos from list one by one
         print("exported complete list")
 
     def clearList(self):
@@ -135,6 +138,7 @@ class ComboApp(QWidget):
             item = self.notList.selectedItems()[0]
             row=self.notList.row(item)
             self.notList.takeItem(row)
+
 
     def onChanged(self, text):
         color = "0 0 0 0"
@@ -156,7 +160,7 @@ class ComboApp(QWidget):
     def renewImage(self):
         self.notImage.load("output"+sep+"temp.png")
         self.pxlbl.setPixmap(self.notImage)
-        self.imageArea.setWidget(self.pxlbl)
+        self.pxlbl.setMinimumSize(self.notImage.size())
 
 if __name__ == '__main__':
 

@@ -64,7 +64,7 @@ def parseCombo(inputString, outputFile, color):
             print("No image for "+_result[i]+".")
             i = pygame.image.load("assets"+os.sep+"invalidcombo.png")
             pygame.image.save(i, os.path.join("output", outputFile + ".png"))
-            return
+            continue
         totalwidth += _width[_result[i][7:-4]]
     dimensions = (totalwidth, 120)
     _surface = pygame.Surface(dimensions, pygame.SRCALPHA, 32)

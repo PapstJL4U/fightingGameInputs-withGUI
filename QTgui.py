@@ -119,8 +119,8 @@ class ComboApp(QWidget):
     def expNotation(self):
         color = ['-c','0 0 0 0']
         game = ['-g','sf']
-        outputfile = ['-o', self.notEdit.text()]
-        inputstring = ['-i', self.notEdit.text()]
+        outputfile = ['-o', 'text']
+        inputstring = ['-i', text]
         inputs_tti.main(game+inputstring+outputfile+color)
         print("exported notation image")
 

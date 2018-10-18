@@ -1,12 +1,12 @@
 #!/usr/bin/python
-
+print("in inputs...")
 import sys, os, re, argparse, string
 import pygame
 
 sys.path.append('games')
 sys.path.append('assets')
 
-# Create and configure arguments parser
+#Create and configure arguments parser
 parser = argparse.ArgumentParser(description="Text-to-image for fighting game inputs")
 group = parser.add_mutually_exclusive_group()
 group.add_argument("-g", "--game", help="standard template for a specific game.\
@@ -16,7 +16,7 @@ group.add_argument("-t", "--template", help="import custom image template.\
 
 group2 = parser.add_mutually_exclusive_group(required=True)
 group2.add_argument("-A", "--available-inputs", help="display available inputs and exit",
-        action="store_const", const=True)
+                    action="store_const", const=True)
 group2.add_argument("-i", "--input", help="input string. \
         Complete list of available inputs can be displayed with option '-H'.")
 group2.add_argument("-l", "--list-games", help="list avaialable games", action="store_const", const=True)
@@ -26,17 +26,18 @@ parser.add_argument("-o", "--output", help="name of the produced file, in the ou
 parser.add_argument("-c", "--color", help="color of the background. Syntax is \"R G B A\", \
         values must be between 0 and 255. Default is clear", default = "0 0 0 0")
 parser.add_argument("-p", "--padding", help="padding in between each input.", default = "10")
-args = vars(parser.parse_args());
 
-if __name__ == '__main__':
+def main(argus):
 
+    args = vars(parser.parse_args(argus))
     if args["list_games"] is not None:
         #dynamically get .py files in games/ and list them here
-        print "Found:\ndbfz\nsf"
+        print("Found:\ndbfz\nsf")
         sys.exit(0)
 
-# check for game / template
+    # check for game / template
     # this most definitely needs more error checking
+    print("checking for games")
     if args["template"] is not None:
         m = __import__(args["template"])
     elif args["game"] is not None:
@@ -46,12 +47,13 @@ if __name__ == '__main__':
     inputs = {}
     inputs.update(m._inputs)
 
+    print("available inputs")
     if args["available_inputs"] is not None:
         for image in inputs:
-            print image
+            print(image)
             for key in inputs[image]:
-                if key == inputs[image].keys()[-1]:
-                    print key
+                if key == list(inputs[image].keys())[-1]:
+                    print(key)
                 else:
                     sys.stdout.write(key + ", ")
         sys.exit(0)
@@ -103,4 +105,9 @@ if __name__ == '__main__':
         pos += _positions[i].width + padding
 
     pygame.image.save(_surface, os.path.join("output", outputFile + ".png"))
-    print "Image saved to " + os.path.join("output", outputFile + ".png") + " !"
+    print("Image saved to " + os.path.join("output", outputFile + ".png") + " !")
+
+
+if __name__ == '__main__':
+
+    main(sys.argv[1:])

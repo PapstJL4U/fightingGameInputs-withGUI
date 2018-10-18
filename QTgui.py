@@ -34,6 +34,7 @@ class ComboApp(QWidget):
         self.notEdit.setMinimumHeight(50)
         self.notEdit.setFont(notationFont)
         self.notEdit.textChanged[str].connect(self.onChanged)
+        self.notEdit.selectionChanged.connect(self.renewImage)
 
         # List field for Notation
         self.notList = QListWidget()
@@ -42,7 +43,7 @@ class ComboApp(QWidget):
         self.notList.setToolTip('Select a combo and press "DEL" to delete it.')
 
         # buttons
-        expNotationB = QPushButton("Export single notation")
+        expNotationB = QPushButton("Export combo notation")
         expNotationB.clicked.connect(self.expNotation)
         addNotationB = QPushButton("Add notation to list")
         addNotationB.clicked.connect(self.addNotation)
@@ -107,17 +108,14 @@ class ComboApp(QWidget):
         self.show()
 
     def centerUI(self):
-
         qr = self.frameGeometry()
         cp = QDesktopWidget().availableGeometry().center()
         qr.moveCenter(cp)
         self.move(qr.topLeft())
         
     def addNotation(self):
-
-        if self.notEdit.text() != "":
-            self.notList.addItem(self.notEdit.text())
-            print("added notation to list")
+        if not self.notEdit.text().isspace():
+            self.notList.addItem(self.notEdit.text().lstrip().rstrip())
 
     def expNotation(self):
         color = ['-c', '0 0 0 0']
@@ -125,10 +123,8 @@ class ComboApp(QWidget):
         outputfile = ['-o', self.notEdit.text()]
         inputstring = ['-i', self.notEdit.text()]
         inputparser(game+inputstring+outputfile+color)
-        print("exported notation image")
 
     def expList(self):
-        print("exporting list")
         color = ['-c', '0 0 0 0']
         game = ['-g', 'sf']
         for i in range(0, self.notList.count()):
@@ -152,9 +148,9 @@ class ComboApp(QWidget):
             self.notList.takeItem(row)
 
     def onChanged(self, text):
-        if len(text)>0 and not text.isspace():
-            color = ['-c','0 0 0 0']
-            game = ['-g','sf']
+        if len(text) > 0 and not text.isspace():
+            color = ['-c', '0 0 0 0']
+            game = ['-g', 'sf']
             outputfile = ['-o', 'temp']
             inputstring = ['-i', text.lstrip(" ").rstrip(" ")]
             inputparser(game + inputstring + outputfile + color)
@@ -170,18 +166,22 @@ class ComboApp(QWidget):
                 inputstring = ['-i', item.text().lstrip(" ").rstrip(" ")]
                 inputparser(game + inputstring + outputfile + color)
                 self.renewImage()
-                #print("preview combo image..."+item.text())
         except:
             raise
 
     def renewImage(self, image = "temp"):
         img = image
-        self.notImage.load("output"+sep+img+".png")
-        self.pxlbl.setPixmap(self.notImage)
-        self.pxlbl.setMinimumSize(self.notImage.size())
+        try:
+            if img == "temp":
+                self.notImage.load("output"+sep+img+".png")
+            else:
+                self.notImage.load("assets"+sep+img+".png")
+            self.pxlbl.setPixmap(self.notImage)
+            self.pxlbl.setMinimumSize(self.notImage.size())
+        except:
+            raise
 
 if __name__ == '__main__':
-
 
     app = QApplication(sys.argv)
     cApp = ComboApp()

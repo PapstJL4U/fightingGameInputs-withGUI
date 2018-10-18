@@ -1,5 +1,6 @@
 #!/usr/bin/python3
 import sys, os, re, argparse, string
+from shutil import copy2
 import pygame
 
 sys.path.append('games')
@@ -73,8 +74,8 @@ def main(argus):
     _positions = []
     _image_list = []
     _images = {}
-    totalWidth = 0
-    highestHeight = 0
+    totalWidth = 1
+    highestHeight = 1
 
     #probably could use some optimization
     # checks each command for the first occurance in any dictionary
@@ -101,9 +102,11 @@ def main(argus):
         _surface.blit(_images[_image_list[i]], (pos ,(highestHeight-_positions[i].height)/2), _positions[i])
         pos += _positions[i].width + padding
 
-    pygame.image.save(_surface, os.path.join("output", outputFile + ".png"))
-    print("Image saved to " + os.path.join("output", outputFile + ".png") + " !")
-
+    if totalWidth > 1 and highestHeight > 1:
+        pygame.image.save(_surface, os.path.join("output", outputFile + ".png"))
+        print("Image saved to " + os.path.join("output", outputFile + ".png") + " !")
+    else:
+        copy2("assets"+os.sep+"invalidcombo.png", "output"+os.sep+"temp.png")
 
 if __name__ == '__main__':
 

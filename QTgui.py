@@ -1,7 +1,8 @@
 #!/usr/bin/python3
 # -*- coding: utf-8 -*-
 
-import sys, inputs_tti
+import sys
+from inputs_tti import main as inputparser
 from PyQt5.QtWidgets import *
 from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QPixmap, QFont
@@ -121,7 +122,7 @@ class ComboApp(QWidget):
         game = ['-g','sf']
         outputfile = ['-o', self.notEdit.text()]
         inputstring = ['-i', self.notEdit.text()]
-        inputs_tti.main(game+inputstring+outputfile+color)
+        inputparser(game+inputstring+outputfile+color)
         print("exported notation image")
 
     def expList(self):
@@ -148,7 +149,7 @@ class ComboApp(QWidget):
         game = ['-g','sf']
         outputfile = ['-o', 'temp']
         inputstring = ['-i', text]
-        inputs_tti.main(game+inputstring+outputfile+color)
+        inputparser(game+inputstring+outputfile+color)
         self.renewImage()
 
     def itemPressed(self):

@@ -1,5 +1,5 @@
 #!/usr/bin/python
-
+print("in inputs...")
 import sys, os, re, argparse, string
 import pygame
 
@@ -29,7 +29,7 @@ parser.add_argument("-p", "--padding", help="padding in between each input.", de
 
 def main(argus):
 
-    args = vars(parser.parse_args(argus));
+    args = vars(parser.parse_args(argus))
     if args["list_games"] is not None:
         #dynamically get .py files in games/ and list them here
         print("Found:\ndbfz\nsf")

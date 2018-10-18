@@ -1,5 +1,4 @@
-#!/usr/bin/python
-print("in inputs...")
+#!/usr/bin/python3
 import sys, os, re, argparse, string
 import pygame
 
@@ -37,7 +36,6 @@ def main(argus):
 
     # check for game / template
     # this most definitely needs more error checking
-    print("checking for games")
     if args["template"] is not None:
         m = __import__(args["template"])
     elif args["game"] is not None:
@@ -47,7 +45,6 @@ def main(argus):
     inputs = {}
     inputs.update(m._inputs)
 
-    print("available inputs")
     if args["available_inputs"] is not None:
         for image in inputs:
             print(image)
@@ -101,7 +98,7 @@ def main(argus):
     pos = 0
 
     for i in range(len(_image_list)):
-        _surface.blit(_images[_image_list[i]], (pos,(highestHeight-_positions[i].height)/2), _positions[i])
+        _surface.blit(_images[_image_list[i]], (pos ,(highestHeight-_positions[i].height)/2), _positions[i])
         pos += _positions[i].width + padding
 
     pygame.image.save(_surface, os.path.join("output", outputFile + ".png"))

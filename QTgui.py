@@ -8,6 +8,7 @@ from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QPixmap, QFont
 from os import sep
 
+
 class ComboApp(QWidget):
 
     def __init__(self):
@@ -18,28 +19,29 @@ class ComboApp(QWidget):
 
         grid = QGridLayout()
 
-        #Labels
+        # Labels
         notLabel = QLabel("<h1>Combo</h1>")
         listLabel = QLabel("<h2>List of notations</h2>")
         imgLabel = QLabel("<h2>Notation preview</h2>")
 
-        #Edit field font
+        # Edit field font
         notationFont = QFont()
         notationFont.setPointSize(20)
-        #Edit field
+
+        # Edit field
         self.notEdit = QLineEdit()
-        self.notEdit.setPlaceholderText("2 mp , 4 mp > hp qcb mk srk 2p" )
+        self.notEdit.setPlaceholderText("2 mp , 4 mp > hp qcb mk srk 2p")
         self.notEdit.setMinimumHeight(50)
         self.notEdit.setFont(notationFont)
         self.notEdit.textChanged[str].connect(self.onChanged)
 
-        #List field for Notation
+        # List field for Notation
         self.notList = QListWidget()
         #self.notList.itemPressed.connect(self.listItemPressed)
         self.notList.itemPressed.connect(self.itemPressed)
         self.notList.setToolTip('Select a combo and press "DEL" to delete it.')
 
-        #buttons
+        # buttons
         expNotationB = QPushButton("Export single notation")
         expNotationB.clicked.connect(self.expNotation)
         addNotationB = QPushButton("Add notation to list")
@@ -49,7 +51,7 @@ class ComboApp(QWidget):
         clearListB =  QPushButton("Clear list")
         clearListB.clicked.connect(self.clearList)
 
-        #notation image
+        # notation image
         self.notImage = QPixmap('assets'+sep+'default.png')
         self.pxlbl = QLabel(self)
         self.pxlbl.setPixmap(self.notImage)
@@ -59,9 +61,9 @@ class ComboApp(QWidget):
 
         print(str(self.imageArea.size())+"in init")
 
-        #group for the layout
+        # group for the layout
 
-        #Layout for the input and image
+        # Layout for the input and image
         vboxleft = QVBoxLayout()
         topleft = QGroupBox(self)
 
@@ -72,14 +74,14 @@ class ComboApp(QWidget):
 
         topleft.setLayout(vboxleft)
 
-        #Layout for the list of notations
+        # Layout for the list of notations
         vboxright = QVBoxLayout()
         topright = QGroupBox(self)
         vboxright.addWidget(listLabel)
         vboxright.addWidget(self.notList)
         topright.setLayout(vboxright)
 
-        #layout for the buttons
+        # layout for the buttons
         gridboxbottom = QGridLayout()
         bottom = QGroupBox(self)
         gridboxbottom.addWidget(expNotationB, 0, 0)
@@ -95,8 +97,8 @@ class ComboApp(QWidget):
         splitter2 = QSplitter(Qt.Vertical)
         splitter2.addWidget(splitter1)
         splitter2.addWidget(bottom)
-        #add components
 
+        # add components
         grid.addWidget(splitter2)
         self.setLayout(grid)
         self.setGeometry(400, 400, 500, 250)
@@ -118,59 +120,70 @@ class ComboApp(QWidget):
             print("added notation to list")
 
     def expNotation(self):
-        color = ['-c','0 0 0 0']
-        game = ['-g','sf']
+        color = ['-c', '0 0 0 0']
+        game = ['-g', 'sf']
         outputfile = ['-o', self.notEdit.text()]
         inputstring = ['-i', self.notEdit.text()]
         inputparser(game+inputstring+outputfile+color)
         print("exported notation image")
 
     def expList(self):
-        #TODO parse all Combos from list one by one
-        print("exported complete list")
+        print("exporting list")
+        color = ['-c', '0 0 0 0']
+        game = ['-g', 'sf']
+        for i in range(0, self.notList.count()):
+            inputstring = ['-i', self.notList.item(i).text()]
+            outputfile = inputstring
+            inputparser(game+inputstring+outputfile+color)
 
     def clearList(self):
         self.notList.clear()
 
     def keyPressEvent(self, QKeyEvent):
-
         if QKeyEvent.key() == Qt.Key_Enter or QKeyEvent.key() == Qt.Key_Return:
-            self.addNotation()
+            if not self.notEdit.text().isspace():
+                self.addNotation()
             self.notEdit.clear()
+            self.onChanged(self.notEdit.placeholderText())
 
         if QKeyEvent.key() == Qt.Key_Delete and self.notList.hasFocus() and self.notList.count() > 0:
             item = self.notList.selectedItems()[0]
-            row=self.notList.row(item)
+            row = self.notList.row(item)
             self.notList.takeItem(row)
 
-
     def onChanged(self, text):
-        color = ['-c','0 0 0 0']
-        game = ['-g','sf']
-        outputfile = ['-o', 'temp']
-        inputstring = ['-i', text]
-        inputparser(game+inputstring+outputfile+color)
-        self.renewImage()
+        if len(text)>0 and not text.isspace():
+            color = ['-c','0 0 0 0']
+            game = ['-g','sf']
+            outputfile = ['-o', 'temp']
+            inputstring = ['-i', text.lstrip(" ").rstrip(" ")]
+            inputparser(game + inputstring + outputfile + color)
+            self.renewImage()
 
     def itemPressed(self):
         try:
             if self.notList.count() > 0:
                 item = self.notList.selectedItems()[0]
-                #parseCombo(item.text(), "temp", "0 0 0 0")
+                color = ['-c','0 0 0 0']
+                game = ['-g','sf']
+                outputfile = ['-o', 'temp']
+                inputstring = ['-i', item.text().lstrip(" ").rstrip(" ")]
+                inputparser(game + inputstring + outputfile + color)
                 self.renewImage()
-                print("preview combo image..."+item.text())
+                #print("preview combo image..."+item.text())
         except:
             raise
 
-    def renewImage(self):
-        self.notImage.load("output"+sep+"temp.png")
+    def renewImage(self, image = "temp"):
+        img = image
+        self.notImage.load("output"+sep+img+".png")
         self.pxlbl.setPixmap(self.notImage)
         self.pxlbl.setMinimumSize(self.notImage.size())
 
 if __name__ == '__main__':
 
+
     app = QApplication(sys.argv)
     cApp = ComboApp()
     cApp.setMinimumSize(1000, 500)
     sys.exit(app.exec_())
-

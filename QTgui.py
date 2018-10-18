@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 import sys
-from inputs_tti import parseCombo
+from inputs_tti import main as inputparser
 from PyQt5.QtWidgets import *
 from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QPixmap, QFont
@@ -118,7 +118,11 @@ class ComboApp(QWidget):
             print("added notation to list")
 
     def expNotation(self):
-        parseCombo(self.notEdit.text(), self.notEdit.text(), "0 0 0 0")
+        color = ['-c','0 0 0 0']
+        game = ['-g','sf']
+        outputfile = ['-o', self.notEdit.text()]
+        inputstring = ['-i', self.notEdit.text()]
+        inputparser(game+inputstring+outputfile+color)
         print("exported notation image")
 
     def expList(self):
@@ -141,17 +145,18 @@ class ComboApp(QWidget):
 
 
     def onChanged(self, text):
-        color = "0 0 0 0"
-        outputfile = "temp"
-        inputstring = text
-        parseCombo(inputstring, outputfile, color)
+        color = ['-c','0 0 0 0']
+        game = ['-g','sf']
+        outputfile = ['-o', 'temp']
+        inputstring = ['-i', text]
+        inputparser(game+inputstring+outputfile+color)
         self.renewImage()
 
     def itemPressed(self):
         try:
             if self.notList.count() > 0:
                 item = self.notList.selectedItems()[0]
-                parseCombo(item.text(), "temp", "0 0 0 0")
+                #parseCombo(item.text(), "temp", "0 0 0 0")
                 self.renewImage()
                 print("preview combo image..."+item.text())
         except:

@@ -1,94 +1,113 @@
 #!/usr/bin/python
-
+print("in inputs...")
 import sys, os, re, argparse, string
 import pygame
 
-from constants import _available, _input, _width, path
-# Create and configure arguments parser
+sys.path.append('games')
+sys.path.append('assets')
+
+#Create and configure arguments parser
 parser = argparse.ArgumentParser(description="Text-to-image for fighting game inputs")
-parser.add_argument("-O", "--correct-options", help="display available inputs and exit",
-        action="store_const", const=True)
-parser.add_argument("-i", "--input", help="input string. \
-        Complete list of available inputs can be displayed with option '-H'.", required=True)
+group = parser.add_mutually_exclusive_group()
+group.add_argument("-g", "--game", help="standard template for a specific game.\
+        Default is dbfz", default = "dbfz")
+group.add_argument("-t", "--template", help="import custom image template.\
+        For an example template look at the standard games.")
+
+group2 = parser.add_mutually_exclusive_group(required=True)
+group2.add_argument("-A", "--available-inputs", help="display available inputs and exit",
+                    action="store_const", const=True)
+group2.add_argument("-i", "--input", help="input string. \
+        Complete list of available inputs can be displayed with option '-H'.")
+group2.add_argument("-l", "--list-games", help="list avaialable games", action="store_const", const=True)
+
 parser.add_argument("-o", "--output", help="name of the produced file, in the output/ folder. \
         If not given, a name will be created based on the input string.")
 parser.add_argument("-c", "--color", help="color of the background. Syntax is \"R G B A\", \
-        values must be between 0 and 255.")
-args = vars(parser.parse_args())
+        values must be between 0 and 255. Default is clear", default = "0 0 0 0")
+parser.add_argument("-p", "--padding", help="padding in between each input.", default = "10")
 
-def parseCombo(inputString, outputFile, color):
+def main(argus):
 
-    colorarg = color.split(' ')
-    _color = pygame.Color(int(colorarg[0]), int(colorarg[1]), int(colorarg[2]), int(colorarg[3]))
-    _string = inputString.lower()
+    args = vars(parser.parse_args(argus))
+    if args["list_games"] is not None:
+        #dynamically get .py files in games/ and list them here
+        print("Found:\ndbfz\nsf")
+        sys.exit(0)
 
-    robj = re.compile(r'\b(' + '|'.join(_input.keys()) + r')\b')
-    _result = robj.sub(lambda m: _input[m.group(0)], _string)
+    # check for game / template
+    # this most definitely needs more error checking
+    print("checking for games")
+    if args["template"] is not None:
+        m = __import__(args["template"])
+    elif args["game"] is not None:
+        m = __import__(args["game"])
 
-    # Arrange inputs
-    _result = _result.split(' ')
-    for i in range(len(_result)):
-        if _result[i] == ',':
-            _result[i] = path + 'comma.png'
-        elif _result[i] == '+':
-            _result[i] = path + 'plus.png'
-        elif _result[i] == '~':
-            _result[i] = path + 'tilde.png'
-        elif _result[i] == '>':
-            _result[i] = path + 'greaterthan.png'
-        elif _result[i] == '1':
-            _result[i] = path + 'downleft.png'
-        elif _result[i] == '2':
-            _result[i] = path + 'down.png'
-        elif _result[i] == '3':
-            _result[i] = path + 'downright.png'
-        elif _result[i] == '4':
-            _result[i] = path + 'left.png'
-        elif _result[i] == '5':
-            _result[i] = path + 'neutral.png'
-        elif _result[i] == '6':
-            _result[i] = path + 'right.png'
-        elif _result[i] == '7':
-            _result[i] = path + 'upleft.png'
-        elif _result[i] == '8':
-            _result[i] = path + 'up.png'
-        elif _result[i] == '9':
-            _result[i] = path + 'upright.png'
+    #import inputs from selected game
+    inputs = {}
+    inputs.update(m._inputs)
 
-    _images = []
-    totalwidth = 0
-    for i in range(len(_result)):
-        try:
-            _images.append(pygame.image.load(_result[i]))
-        except pygame.error as err:
-            print("No image for "+_result[i]+".")
-            i = pygame.image.load("assets"+os.sep+"invalidcombo.png")
-            pygame.image.save(i, os.path.join("output", outputFile + ".png"))
-            continue
-        totalwidth += _width[_result[i][7:-4]]
-    dimensions = (totalwidth, 120)
-    _surface = pygame.Surface(dimensions, pygame.SRCALPHA, 32)
-    pygame.draw.rect(_surface, _color, (0, 0, totalwidth, 120), 0)
-    totalwidth = 0
-    for i in range(len(_images)):
-        _surface.blit(_images[i], (totalwidth, 0))
-        totalwidth += _width[_result[i][7:-4]]
-
-    pygame.image.save(_surface, os.path.join("output", outputFile + ".png"))
-
-
-if __name__ == '__main__':
-    if args["correct_options"] is not None:
-        print("List of available inputs:\n" + _available)
+    print("available inputs")
+    if args["available_inputs"] is not None:
+        for image in inputs:
+            print(image)
+            for key in inputs[image]:
+                if key == list(inputs[image].keys())[-1]:
+                    print(key)
+                else:
+                    sys.stdout.write(key + ", ")
         sys.exit(0)
 
     # argparse arguments
     inputString = args["input"]
     outputFile = args["output"] if args["output"] != None else inputString
     outputFile = ''.join(c for c in outputFile
-                         if c in "-_.() %s%s" % (string.ascii_letters, string.digits)) \
-        .replace(" ", "")
-    color = args["color"] if args["color"] != None else "0 0 0 0"
+            if c in "-_.() %s%s" % (string.ascii_letters, string.digits))\
+            .replace(" ", "")
 
-    parseCombo(inputString, outputFile, color)
+    color = args["color"] if args["color"] != None else "0 0 0 0"
+    colorarg = color.split(' ')
+    _color = pygame.Color(int(colorarg[0]), int(colorarg[1]), int(colorarg[2]), int(colorarg[3]))
+
+    _string = inputString.lower()
+
+    padding = int(args["padding"])
+
+    _positions = []
+    _image_list = []
+    _images = {}
+    totalWidth = 0
+    highestHeight = 0
+
+    #probably could use some optimization
+    # checks each command for the first occurance in any dictionary
+    #   saves off data for that command before moving on
+    for com in _string.split(' '):
+        for image in inputs:
+            if com in inputs[image].keys():
+                # Should do more for complext paths...
+                path = image.split('/')
+                _images.update({image:pygame.image.load(os.path.join(path[0],path[1]))})
+                _image_list += [image]
+                _positions += [pygame.Rect(inputs[image][com])]
+                totalWidth += pygame.Rect(inputs[image][com]).width + padding
+                if highestHeight < pygame.Rect(inputs[image][com]).height:
+                    highestHeight = pygame.Rect(inputs[image][com]).height
+                break
+
+    _surface = pygame.Surface((totalWidth, highestHeight), pygame.SRCALPHA, 32)
+    pygame.draw.rect(_surface, _color, (0, 0, totalWidth, highestHeight), 0)
+
+    pos = 0
+
+    for i in range(len(_image_list)):
+        _surface.blit(_images[_image_list[i]], (pos,(highestHeight-_positions[i].height)/2), _positions[i])
+        pos += _positions[i].width + padding
+
+    pygame.image.save(_surface, os.path.join("output", outputFile + ".png"))
     print("Image saved to " + os.path.join("output", outputFile + ".png") + " !")
+
+
+if __name__ == '__main__':
+
+    main(sys.argv[1:])

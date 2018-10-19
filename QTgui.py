@@ -15,6 +15,10 @@ class ComboApp(QWidget):
         super().__init__()
         self.initUI()
 
+        # default variables
+        self.game = ['-g', "sf"]
+        self.colour = ['-c', "0 0 0 0"]
+
     def initUI(self):
 
         grid = QGridLayout()
@@ -114,9 +118,6 @@ class ComboApp(QWidget):
         self.centerUI()
         self.show()
 
-        # default variables
-        self.game = ['-g', "sf"]
-        self.colour = ['-c', "0 0 0 0"]
 
     def centerUI(self):
         qr = self.frameGeometry()
@@ -203,7 +204,8 @@ class ComboApp(QWidget):
     def updateColour(self):
         #TODO
         print("TODO")
-        self.colour = ['-c', "TODO"]
+        self.colour = ['-c', "0 0 0 0"]
+
 
 if __name__ == '__main__':
 

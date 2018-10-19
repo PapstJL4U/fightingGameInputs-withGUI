@@ -34,6 +34,7 @@ class ComboApp(QWidget):
         self.notEdit.setMinimumHeight(50)
         self.notEdit.setFont(notationFont)
         self.notEdit.setDragEnabled(True)
+        self.notEdit.setToolTip('You need to place a space between each command. Like "2 lp xx 623 HP')
         self.notEdit.textChanged[str].connect(self.onChanged)
         self.notEdit.selectionChanged.connect(self.renewImage)
 

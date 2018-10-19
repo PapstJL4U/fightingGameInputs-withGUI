@@ -54,7 +54,8 @@ class ComboApp(QWidget):
         clearListB =  QPushButton("Clear list")
         clearListB.clicked.connect(self.clearList)
         self.comboBox = QComboBox(self)
-        self.comboBox.addItems(["sf", "dbfz", "ggxrd", "ggxrd_modern", "bbcrosstag"])
+        # disabled dbfz, cuz no buttons :< "dbfz"
+        self.comboBox.addItems(["sf","ggxrd", "ggxrd_modern", "bbcrosstag"])
         self.comboBox.activated[str].connect(self.updateGame)
 
         # notation image

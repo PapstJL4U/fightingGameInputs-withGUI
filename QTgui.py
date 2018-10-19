@@ -33,6 +33,7 @@ class ComboApp(QWidget):
         self.notEdit.setPlaceholderText("2 mp , 4 mp > hp qcb mk srk 2p")
         self.notEdit.setMinimumHeight(50)
         self.notEdit.setFont(notationFont)
+        self.notEdit.setDragEnabled(True)
         self.notEdit.textChanged[str].connect(self.onChanged)
         self.notEdit.selectionChanged.connect(self.renewImage)
 

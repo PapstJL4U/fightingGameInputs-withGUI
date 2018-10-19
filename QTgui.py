@@ -52,7 +52,7 @@ class ComboApp(QWidget):
         clearListB =  QPushButton("Clear list")
         clearListB.clicked.connect(self.clearList)
         self.comboBox = QComboBox(self)
-        self.comboBox.addItems(["sf", "dbfz", "ggxrd"])
+        self.comboBox.addItems(["sf", "dbfz", "ggxrd", "ggxrd_modern"])
         self.comboBox.activated[str].connect(self.updateGame)
 
         # notation image
@@ -112,7 +112,7 @@ class ComboApp(QWidget):
         self.show()
 
         # default variables
-        self.game = ['-g', "ggxrd"]
+        self.game = ['-g', "sf"]
         self.colour = ['-c', "0 0 0 0"]
 
     def centerUI(self):
@@ -193,8 +193,9 @@ class ComboApp(QWidget):
         self.game = ['-g', game]
         self.colour = ['-c', colour]
 
-    def updateGame(self):
-        self.game = ['-g', self.comboBox.currentText()]
+    def updateGame(self, text):
+        self.game = ['-g', text]
+        self.onChanged(self.notEdit.text())
 
     def updateColour(self):
         #TODO

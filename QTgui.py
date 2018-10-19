@@ -51,6 +51,9 @@ class ComboApp(QWidget):
         expListB.clicked.connect(self.expList)
         clearListB =  QPushButton("Clear list")
         clearListB.clicked.connect(self.clearList)
+        self.comboBox = QComboBox(self)
+        self.comboBox.addItems(["sf", "dbfz", "ggxrd"])
+        self.comboBox.activated[str].connect(self.updateGame)
 
         # notation image
         self.notImage = QPixmap('assets'+sep+'default.png')
@@ -60,7 +63,7 @@ class ComboApp(QWidget):
         self.imageArea.setWidget(self.pxlbl)
         self.imageArea.setMaximumHeight(150)
 
-        print(str(self.imageArea.size())+"in init")
+        #print(str(self.imageArea.size())+"in init")
 
         # group for the layout
 
@@ -89,6 +92,7 @@ class ComboApp(QWidget):
         gridboxbottom.addWidget(addNotationB, 0, 1)
         gridboxbottom.addWidget(expListB, 0, 2)
         gridboxbottom.addWidget(clearListB, 0, 3)
+        gridboxbottom.addWidget(self.comboBox, 0, 4)
         bottom.setLayout(gridboxbottom)
 
         splitter1 = QSplitter(Qt.Horizontal)
@@ -107,6 +111,10 @@ class ComboApp(QWidget):
         self.centerUI()
         self.show()
 
+        # default variables
+        self.game = ['-g', "ggxrd"]
+        self.colour = ['-c', "0 0 0 0"]
+
     def centerUI(self):
         qr = self.frameGeometry()
         cp = QDesktopWidget().availableGeometry().center()
@@ -118,15 +126,15 @@ class ComboApp(QWidget):
             self.notList.addItem(self.notEdit.text().lstrip().rstrip())
 
     def expNotation(self):
-        color = ['-c', '0 0 0 0']
-        game = ['-g', 'sf']
+        color = self.colour
+        game = self.game
         outputfile = ['-o', self.notEdit.text()]
         inputstring = ['-i', self.notEdit.text()]
         inputparser(game+inputstring+outputfile+color)
 
     def expList(self):
-        color = ['-c', '0 0 0 0']
-        game = ['-g', 'sf']
+        color = self.colour
+        game = self.game
         for i in range(0, self.notList.count()):
             inputstring = ['-i', self.notList.item(i).text()]
             outputfile = inputstring
@@ -149,8 +157,8 @@ class ComboApp(QWidget):
 
     def onChanged(self, text):
         if len(text) > 0 and not text.isspace():
-            color = ['-c', '0 0 0 0']
-            game = ['-g', 'sf']
+            color = self.colour
+            game = self.game
             outputfile = ['-o', 'temp']
             inputstring = ['-i', text.lstrip(" ").rstrip(" ")]
             inputparser(game + inputstring + outputfile + color)
@@ -160,8 +168,8 @@ class ComboApp(QWidget):
         try:
             if self.notList.count() > 0:
                 item = self.notList.selectedItems()[0]
-                color = ['-c','0 0 0 0']
-                game = ['-g','sf']
+                color = self.colour
+                game = self.game
                 outputfile = ['-o', 'temp']
                 inputstring = ['-i', item.text().lstrip(" ").rstrip(" ")]
                 inputparser(game + inputstring + outputfile + color)
@@ -180,6 +188,18 @@ class ComboApp(QWidget):
             self.pxlbl.setMinimumSize(self.notImage.size())
         except:
             raise
+
+    def updateGameColour(self, game = "sf", colour = "0 0 0 0"):
+        self.game = ['-g', game]
+        self.colour = ['-c', colour]
+
+    def updateGame(self):
+        self.game = ['-g', self.comboBox.currentText()]
+
+    def updateColour(self):
+        #TODO
+        print("TODO")
+        self.colour = ['-c', "TODO"]
 
 if __name__ == '__main__':
 

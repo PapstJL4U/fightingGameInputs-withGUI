@@ -1,4 +1,4 @@
-This is a work-in-progress GUI for [neph0s command-line tool](https://github.com/Neph0/fightingGameInputs-tti)
+This is a work-in-progress GUI for [neph0s command-line tool](https://github.com/Neph0/text-to-input), previously https://github.com/Neph0/fightingGameInputs-tti
 
 # Requirements:
 * [Python 3.5](https://www.python.org/download/releases/3.5/)
